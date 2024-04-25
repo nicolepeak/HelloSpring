@@ -8,42 +8,51 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("hello")
 public class HelloController {
 
-    // Handles requests at path /hello
-//    @GetMapping("hello")
-//    @ResponseBody
-//    public String hello() {
-//        return "Hello, Spring!";
-//    }
-
     //now lives at /hello/goodbye
     @GetMapping("goodbye")
     public String goodbye() {
         return "Goodbye, Spring!";
     }
 
-    //now lives at /hello/hello
-    //Handles request of the form /hello?name=LaunchCode
-    @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
-    public String helloWithQueryParam(@RequestParam String name) {
-        return "hello, " + name + "!";
-    }
-
-    // Handles requests of the form /hello/LaunchCode
-    @GetMapping("{name}")
-    public String helloWithPathParam(@PathVariable String name){
-        return "Hello " + name + "!";
-    }
-
-
     @GetMapping("form")
     public String helloForm(){
         return "<html>" +
                 "<body>" +
                 "<form action= 'hello' method='post'>" + //submit request to /hello
-                "<input type='text' name='name'>" +
+                "<input type='text' name='name' placeholder='Enter your name'>" +
+                "<select name = 'language'>" +
+                "<option value='french'>french</option>" +
+                "<option value='english'>english</option>" +
+                "<option value='arabic'>arabic</option>" +
+                "<option value='italian'>italian</option>" +
+                "<option value='spanish'>spanish</option>" +
+                "</select>" +
                 "<input type='submit' value ='Greet me!'>" +
                 "</form>" +
                 "</body>" +
                 "</html>";
     }
+
+    public static String createMessage(String name, String language) {
+        if (language.equals("french")) {
+            return "bonjour, " + name + "!";
+        } else if (language.equals("english")) {
+            return "Hello, " + name + "!";
+        } else if (language.equals("arabic")) {
+            return "Marhaba, " + name + "!";
+        } else if (language.equals("italian")) {
+            return "bonjourno, " + name + "!";
+        } else return "Hola, " + name + "!";
+    }
+
+    @RequestMapping(value="hello", method = RequestMethod.POST)
+    @ResponseBody
+    public String helloPost(@RequestParam String name, @RequestParam String language) {
+        if (name == null) {
+            name = "World";
+        }
+
+        return createMessage(name, language);
+    }
+
 }
